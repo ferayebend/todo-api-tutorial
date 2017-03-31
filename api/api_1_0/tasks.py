@@ -1,5 +1,5 @@
 from flask import jsonify, request, abort, url_for
-from . import main
+from . import api
 from ..models import tasks
 
 
@@ -12,19 +12,19 @@ def make_public_task(task):
             new_task[field] = task[field]
     return new_task
 
-@main.route('/todo/api/v1.0/tasks', methods=['GET'])
+@api.route('/tasks', methods=['GET'])
 def get_tasks():
     return jsonify({'tasks': [make_public_task(task) for task in tasks]})
 
 
-@main.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['GET'])
+@api.route('/tasks/<int:task_id>', methods=['GET'])
 def get_task(task_id):
     task = [task for task in tasks if task['id'] == task_id]
     if len(task) == 0:
         abort(404)
     return jsonify({'task': task[0]})
 
-@main.route('/todo/api/v1.0/tasks', methods=['POST'])
+@api.route('/tasks', methods=['POST'])
 def create_task():
     if not request.json or not 'title' in request.json:
         abort(400)
@@ -37,7 +37,7 @@ def create_task():
     tasks.append(task)
     return jsonify({'task': task}), 201
 
-@main.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['PUT'])
+@api.route('/tasks/<int:task_id>', methods=['PUT'])
 def update_task(task_id):
     task = [task for task in tasks if task['id'] == task_id]
     if len(task) == 0:
