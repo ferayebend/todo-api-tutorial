@@ -12,6 +12,7 @@ class Task(db.Model):
     def to_json(self):
         json_task = {'url': url_for('api.get_task', task_id=self.id, 
                                                     _external=True),
+                     'id': self.id,
                      'title': self.title,
                      'description': self.description,
                      'done': self.done

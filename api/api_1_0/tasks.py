@@ -3,7 +3,6 @@ from . import api
 from .. import db
 from ..models import Task
 
-
 @api.route('/tasks', methods=['GET'])
 def get_tasks():
     tasks = [task.to_json() for task in Task.query.all()] # TODO add pagination
@@ -29,9 +28,9 @@ def update_task(task_id):
     task = Task.query.get_or_404(task_id)
     if not request.json:
         abort(400)
-    if 'title' in request.json and type(request.json['title']) != unicode:
+    if 'title' in request.json and type(request.json['title']) != str:
         abort(400)
-    if 'description' in request.json and type(request.json['description']) is not unicode:
+    if 'description' in request.json and type(request.json['description']) is not str:
         abort(400)
     if 'done' in request.json and type(request.json['done']) is not bool:
         abort(400)
