@@ -55,3 +55,12 @@ class APITestCase(unittest.TestCase):
                                               task_id = inputted_id))
         json_response = json.loads(response.data.decode('utf-8'))
         self.assertEquals(response.status_code,201)
+
+    def test_user(self):
+        test_user = {'name':'Lenin'}
+
+        #create user
+        response = self.client.post(url_for('api.create_user'),
+                                   data=json.dumps(test_user),
+                                   content_type='application/json')
+        self.assertEquals(response.status_code,201)

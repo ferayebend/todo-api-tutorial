@@ -1,6 +1,6 @@
 import os
 from api import create_app, db
-from api.models import Task
+from api.models import Task, User
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 
@@ -9,7 +9,7 @@ manager = Manager(app=app)
 migrate = Migrate(app, db)
 
 def make_shell_context():
-    return dict(app=app, db=db, Task=Task)
+    return dict(app=app, db=db, Task=Task, User=User)
 manager.add_command("shell", Shell(make_context=make_shell_context))
 manager.add_command("db", MigrateCommand)
 

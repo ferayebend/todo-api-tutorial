@@ -30,3 +30,26 @@ class Task(db.Model):
 
     def __repr__(self):
         return '<Task %r>' % self.title
+
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32), unique=True)
+
+    def to_json(self):
+        json_user = {'url': '',
+                     'id': self.id,
+                     'name': self.name}
+        return json_user
+
+    @staticmethod
+    def from_json(json_user):
+        name = json_user.get('name')
+        if not name:
+            raise ValidationError('user does not have a name')
+        return User(name=name)
+
+    def __repr__(self):
+        return '<User %r>' % self.name
+
+
