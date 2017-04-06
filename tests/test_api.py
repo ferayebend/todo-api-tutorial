@@ -64,3 +64,19 @@ class APITestCase(unittest.TestCase):
                                    data=json.dumps(test_user),
                                    content_type='application/json')
         self.assertEquals(response.status_code,201)
+        json_response = json.loads(response.data.decode('utf-8'))
+        self.assertTrue(json_response['name'],test_user['name'])
+        inputted_id = json_response['id']
+
+        #get user
+        respose = self.client.get(url_for('api.get_user',
+                                          user_id = inputted_id,
+                                          _external = True))
+        json_response = json.loads(response.data.decode('utf-8'))
+        self.assertTrue(json_response['name'],test_user['name'])
+
+        #delete user
+        response = self.client.delete(url_for('api.delete_user',
+                                              user_id = inputted_id))
+        json_response = json.loads(response.data.decode('utf-8'))
+        self.assertEquals(response.status_code,201)
