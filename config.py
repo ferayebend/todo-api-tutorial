@@ -6,6 +6,8 @@ class Config:
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_RECORD_QUERIES = True
+    USE_TOKEN_AUTH = True
+    SECRET_KEY = 'some string'
 
     @staticmethod
     def init_app(app):

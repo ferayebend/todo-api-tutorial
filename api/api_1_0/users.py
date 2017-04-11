@@ -48,3 +48,7 @@ def delete_user(user_id):
     db.session.delete(user)
     db.session.commit()
     return jsonify({'deleted': user_id}), 201
+
+@api.route('/auth_test', methods=['GET'])
+def check_auth():
+    return jsonify({'message':'Hello'})
