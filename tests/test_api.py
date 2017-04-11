@@ -2,8 +2,12 @@ import unittest
 import json
 from flask import url_for
 from api import create_app, db
+from api.models import User
 
 class APITestCase(unittest.TestCase):
+    default_username = 'lenin'
+    default_password = '1917'
+
     def setUp(self):
         self.app = create_app('testing')
         self.app_context = self.app.app_context()
@@ -80,3 +84,14 @@ class APITestCase(unittest.TestCase):
                                               user_id = inputted_id))
         json_response = json.loads(response.data.decode('utf-8'))
         self.assertEquals(response.status_code,201)
+
+    def test_user_auth(self):
+        u = User(name=self.default_username,
+                 password=self.default_password)
+        db.session.add(u)
+        db.session.commit()
+
+        #test an api call which needs user verification
+
+        #test token auth
+        
