@@ -7,8 +7,8 @@ token = Blueprint('token', __name__)
 token_auth = HTTPBasicAuth()
 
 @token_auth.verify_password
-def verify_password(name, password):
-    g.user = User.query.filter_by(name=name).first()
+def verify_password(username, password):
+    g.user = User.query.filter_by(username=username).first()
     if not g.user:
         return False
     return g.user.verify_password(password)

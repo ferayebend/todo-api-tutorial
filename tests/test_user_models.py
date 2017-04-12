@@ -5,10 +5,10 @@ from api.models import User
 
 TEST_USERS = [
                 {
-                'name': u'user1',
+                'username': u'user1',
                 },
                 {
-                'name': u'user2',
+                'username': u'user2',
                 }
              ]
 
@@ -30,13 +30,13 @@ class UserModelTestCase(unittest.TestCase):
 
     def test_create(self):
         test_user_dict = TEST_USERS[0]
-        user_in_db = User.query.filter_by(name=test_user_dict.get('name')).first()
-        self.assertEqual(user_in_db.name, 
-                         test_user_dict.get('name'))
+        user_in_db = User.query.filter_by(username=test_user_dict.get('username')).first()
+        self.assertEqual(user_in_db.username, 
+                         test_user_dict.get('username'))
     def test_to_json(self):
         test_user_dict = TEST_USERS[0]
-        expected_keys = ['url', 'id', 'name']
-        user = User.query.filter_by(name = test_user_dict.get('name')).first()
+        expected_keys = ['url', 'id', 'username']
+        user = User.query.filter_by(username = test_user_dict.get('username')).first()
         user_json = user.to_json()
         self.assertEqual(sorted(expected_keys),sorted(user_json.keys()))
         #self.assertTrue('api/v1.0/users' in user_json.get('url'))

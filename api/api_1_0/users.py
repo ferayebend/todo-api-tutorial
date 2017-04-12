@@ -15,7 +15,7 @@ def get_user(user_id):
 
 @api.route('/users', methods=['POST'])
 def create_user():
-    if not request.json or not 'name' in request.json:
+    if not request.json or not 'username' in request.json:
         abort(400)
     user = User.from_json(request.json)
     db.session.add(user)

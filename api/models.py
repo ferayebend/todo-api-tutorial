@@ -37,7 +37,7 @@ class Task(db.Model):
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(32), unique=True)
+    username = db.Column(db.String(32), unique=True)
     password_hash = db.Column(db.String(128))
 
     @property
@@ -67,17 +67,17 @@ class User(db.Model):
     def to_json(self):
         json_user = {'url': '',
                      'id': self.id,
-                     'name': self.name}
+                     'username': self.username}
         return json_user
 
     @staticmethod
     def from_json(json_user):
-        name = json_user.get('name')
-        if not name:
+        username = json_user.get('username')
+        if not username:
             raise ValidationError('user does not have a name')
-        return User(name=name)
+        return User(username=username)
 
     def __repr__(self):
-        return '<User %r>' % self.name
+        return '<User %r>' % self.username
 
 

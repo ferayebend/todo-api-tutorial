@@ -15,7 +15,7 @@ class APITestCase(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
-        u = User(name=self.default_username,
+        u = User(username=self.default_username,
                  password=self.default_password)
         db.session.add(u)
         db.session.commit()
@@ -61,20 +61,20 @@ class APITestCase(unittest.TestCase):
         self.assertEquals(response.status_code,201)
 
     def test_user(self):
-        test_user = {'name':'Lenin'}
+        test_user = {'username':'Lenin'}
 
         #create user
         response, json_response = self.client.post(url_for('api.create_user'),
                                                    data=test_user)
         self.assertEquals(response.status_code,201)
-        self.assertTrue(json_response['name'],test_user['name'])
+        self.assertTrue(json_response['username'],test_user['username'])
         inputted_id = json_response['id']
 
         #get user
         respose, json_response = self.client.get(url_for('api.get_user',
                                                  user_id = inputted_id,
                                                  _external = True))
-        self.assertTrue(json_response['name'],test_user['name'])
+        self.assertTrue(json_response['username'],test_user['username'])
 
         #delete user
         response, json_response = self.client.delete(url_for('api.delete_user',
