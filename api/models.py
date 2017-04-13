@@ -14,12 +14,14 @@ class Task(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def to_json(self):
+        user = User.query.filter_by(id=self.user_id).first()
         json_task = {'url': url_for('api.get_task', task_id=self.id, 
                                                     _external=True),
                      'id': self.id,
                      'title': self.title,
                      'description': self.description,
-                     'done': self.done
+                     'done': self.done,
+                     'username': user.username
                     }
         return json_task
 
@@ -27,11 +29,10 @@ class Task(db.Model):
     def from_json(json_task):
         title = json_task.get('title')
         description = json_task.get('description','')
-        user_id = json_task.get('user_id')
         if title is None or title == '':
             raise ValidationError('task does not have a title')
         return Task(title=title,
-                    description=description,user_id=user_id)
+                    description=description)
 
     def __repr__(self):
         return '<Task %r>' % self.title

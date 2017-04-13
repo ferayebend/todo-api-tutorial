@@ -58,9 +58,18 @@ class TaskModelTestCase(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
+
+        for test_user in TEST_USERS:
+            user = User.from_json(test_user)
+            db.session.add(user)
+
         for test_task in TEST_TASKS:
             task = Task.from_json(test_task)
+            username1 = TEST_USERS[0].get('username')
+            user1 = User.query.filter_by(username=username1).first()
+            task.user_id = user1.id
             db.session.add(task)
+
         db.session.commit()
 
     def tearDown(self):
@@ -79,9 +88,11 @@ class TaskModelTestCase(unittest.TestCase):
         self.assertEqual(task_in_db.description, 
                          test_task_dict.get('description'))
 
+        self.assertNotEqual(task_in_db.user_id,None)
+
     def test_to_json(self):
         test_task_dict = TEST_TASKS[0]
-        expected_keys = ['url', 'id', 'title', 'description', 'done']
+        expected_keys = ['url', 'id', 'title', 'description', 'done', 'username']
         task = Task.query.filter_by(title = test_task_dict.get('title')).first()
         task_json = task.to_json()
         self.assertEqual(sorted(expected_keys),sorted(task_json.keys()))

@@ -1,4 +1,4 @@
-from flask import jsonify, request, abort, url_for
+from flask import jsonify, request, abort, url_for, g
 from . import api
 from .. import db
 from ..models import Task
@@ -18,6 +18,7 @@ def create_task():
     if not request.json or not 'title' in request.json:
         abort(400)
     task = Task.from_json(request.json)
+    task.user_id = g.user.id
     db.session.add(task)
     db.session.commit()
     return jsonify(task.to_json()), 201, \
