@@ -10,7 +10,8 @@ class Task(db.Model):
     title = db.Column(db.String(64), unique=True)
     description = db.Column(db.String(64))
     done = db.Column(db.Boolean, default=False, index=True)
-    #users = db.relationship('User', backref='role', lazy='dynamic')
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def to_json(self):
         json_task = {'url': url_for('api.get_task', task_id=self.id, 
@@ -26,10 +27,11 @@ class Task(db.Model):
     def from_json(json_task):
         title = json_task.get('title')
         description = json_task.get('description','')
+        user_id = json_task.get('user_id')
         if title is None or title == '':
             raise ValidationError('task does not have a title')
         return Task(title=title,
-                    description=description)
+                    description=description,user_id=user_id)
 
     def __repr__(self):
         return '<Task %r>' % self.title
@@ -39,6 +41,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), unique=True)
     password_hash = db.Column(db.String(128))
+    tasks = db.relationship('Task', backref='users', lazy='dynamic')
 
     @property
     def password(self):
