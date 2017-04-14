@@ -11,6 +11,6 @@ def forbidden(message):
 def not_found(error):
     return make_response(jsonify({'error': 'not found'}), 404)
 
-@api.errorhandler(405)
+@api.app_errorhandler(405)
 def method_not_allowed_error(error):
     return not_allowed()
