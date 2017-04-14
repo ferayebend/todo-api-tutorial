@@ -1,6 +1,7 @@
 from flask import jsonify, request, abort, url_for, g
 from . import api
 from .. import db
+from .errors import forbidden
 from ..models import Task
 
 @api.route('/tasks', methods=['GET'])
@@ -11,6 +12,8 @@ def get_tasks():
 @api.route('/tasks/<int:task_id>', methods=['GET'])
 def get_task(task_id):
     task = Task.query.get_or_404(task_id)
+    if task.user_id != g.user.id:
+        return forbidden("Insuffient permission")
     return jsonify(task.to_json())
 
 @api.route('/tasks', methods=['POST'])

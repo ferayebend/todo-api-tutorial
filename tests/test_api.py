@@ -119,3 +119,10 @@ class APITestCase(unittest.TestCase):
         input_titles = [task['title'] for task in user1_tasks]
 
         self.assertEquals(set(input_titles), set(response_titles))
+
+        # check if access to the tasks of user2 allowed
+        user2_task = user2.tasks.first()
+
+        response, json_response = self.client.get(url_for('api.get_task',
+                                                          task_id = user2_task.id))
+        self.assertEquals(response.status_code, 403)
