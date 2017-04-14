@@ -5,7 +5,7 @@ from ..models import Task
 
 @api.route('/tasks', methods=['GET'])
 def get_tasks():
-    tasks = [task.to_json() for task in Task.query.all()] # TODO add pagination
+    tasks = [task.to_json() for task in g.user.tasks.all()] # TODO add pagination
     return jsonify({'tasks':tasks})
 
 @api.route('/tasks/<int:task_id>', methods=['GET'])

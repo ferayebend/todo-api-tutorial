@@ -97,3 +97,9 @@ class TaskModelTestCase(unittest.TestCase):
         task_json = task.to_json()
         self.assertEqual(sorted(expected_keys),sorted(task_json.keys()))
         self.assertTrue('api/v1.0/tasks', task_json.get('url'))
+
+    def test_relations(self):
+        username1 = TEST_USERS[0].get('username')
+        user1 = User.query.filter_by(username=username1).first()
+        user1_tasks = user1.tasks.all()
+        self.assertEqual(len(user1_tasks),2)
