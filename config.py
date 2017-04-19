@@ -8,6 +8,7 @@ class Config:
     SQLALCHEMY_RECORD_QUERIES = True
     USE_TOKEN_AUTH = True
     SECRET_KEY = 'some string'
+    CELERY_CONFIG = {}
 
     @staticmethod
     def init_app(app):
@@ -22,6 +23,7 @@ class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
+    CELERY_CONFIG = {'CELERY_ALWAYS_EAGER': True}
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
