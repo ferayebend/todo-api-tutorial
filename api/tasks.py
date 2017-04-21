@@ -63,11 +63,7 @@ def async(f):
                    if isinstance(v, text_types)}
         if 'wsgi.input' in request.environ:
             environ['_wsgi.input'] = request.get_data()
-        try:
-            t = run_flask_request.apply_async(args=(environ,))
-        except:
-            print(environ)
-            raise
+        t = run_flask_request.apply_async(args=(environ,))
 
         # Return a 202 response, with a link that the client can use to
         # obtain task status
