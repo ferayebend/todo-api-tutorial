@@ -8,7 +8,6 @@ from flask import Blueprint, g, url_for, abort, jsonify, request
 from werkzeug.exceptions import InternalServerError
 from celery import states
 
-from .api_1_0.errors import not_found
 from . import celery
 
 text_types = (str, bytes)
@@ -27,6 +26,7 @@ def run_flask_request(environ):
 
     if '_wsgi.input' in environ:
         environ['wsgi.input'] = BytesIO(environ['_wsgi.input'])
+
 
     # Create a request context similar to that of the original request
     # so that the task can have access to flask.g, flask.request, etc.
@@ -63,13 +63,17 @@ def async(f):
                    if isinstance(v, text_types)}
         if 'wsgi.input' in request.environ:
             environ['_wsgi.input'] = request.get_data()
-        t = run_flask_request.apply_async(args=(environ,))
+        try:
+            t = run_flask_request.apply_async(args=(environ,))
+        except:
+            print(environ)
+            raise
 
         # Return a 202 response, with a link that the client can use to
         # obtain task status
         if t.state == states.PENDING or t.state == states.RECEIVED or \
                 t.state == states.STARTED:
-            return '', 202, {'Location': url_for('tasks.get_status', id=t.id)}
+            return jsonify({}), 202, {'Location': url_for('tasks.get_status', id=t.id)}
 
         # If the task already finished, return its return value as response
         return t.info

@@ -8,10 +8,15 @@ class Config:
     SQLALCHEMY_RECORD_QUERIES = True
     USE_TOKEN_AUTH = True
     SECRET_KEY = 'some string'
-    CELERY_CONFIG = {'CELERY_ACCEPT_CONTENT':['json','pickle'],
-                     'CELERY_TASK_SERIALIZER':'pickle', 
-                     'CELERY_RESULT_SERIALIZER':'json',
-                     'imports':[".tasks",]}
+    '''
+    CELERY_CONFIG = {'CELERY_ACCEPT_CONTENT':['pickle',
+                                              'application/x-python-serialize'],
+                                              #'application/x-python-json',
+                                              #'application/json'],
+                     'CELERY_TASK_SERIALIZER':'application/x-python-serialize', 
+                     'CELERY_RESULT_SERIALIZER':'json'}#,
+    '''
+    CELERY_CONFIG = {}
 
     @staticmethod
     def init_app(app):

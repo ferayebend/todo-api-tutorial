@@ -11,6 +11,9 @@ celery = Celery(__name__,
                 broker=os.environ.get('CELERY_BROKER_URL', 'redis://'),
                 backend=os.environ.get('CELERY_BROKER_URL', 'redis://'))
 
+from . import models
+from .tasks import run_flask_request # import for the registry 
+
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
