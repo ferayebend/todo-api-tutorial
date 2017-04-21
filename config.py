@@ -8,7 +8,10 @@ class Config:
     SQLALCHEMY_RECORD_QUERIES = True
     USE_TOKEN_AUTH = True
     SECRET_KEY = 'some string'
-    CELERY_CONFIG = {}
+    CELERY_CONFIG = {'CELERY_ACCEPT_CONTENT':['json','pickle'],
+                     'CELERY_TASK_SERIALIZER':'pickle', 
+                     'CELERY_RESULT_SERIALIZER':'json',
+                     'imports':[".tasks",]}
 
     @staticmethod
     def init_app(app):
@@ -23,7 +26,7 @@ class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
-    CELERY_CONFIG = {'CELERY_ALWAYS_EAGER': True}
+    #CELERY_CONFIG = {'CELERY_ALWAYS_EAGER': True}
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \

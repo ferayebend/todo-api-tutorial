@@ -3,6 +3,8 @@ from . import api
 from .. import db
 from .errors import forbidden
 from ..models import Task
+from ..tasks import async
+from time import sleep
 
 @api.route('/tasks', methods=['GET'])
 def get_tasks():
@@ -52,3 +54,9 @@ def delete_task(task_id):
     db.session.delete(task)
     db.session.commit()
     return jsonify({'deleted': task_id}), 201
+
+@api.route('/dummy', methods=['GET'])
+@async
+def dummy():
+    sleep(2)
+    return '', 200#jsonify({'message':'delayed'}), 200

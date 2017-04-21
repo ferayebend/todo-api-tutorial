@@ -1,10 +1,12 @@
 import unittest
-from flask import url_for
+from flask import url_for, jsonify
 from api import create_app, db
 from api.models import User
-#from flack.tasks import async
+from api.tasks import async
 
 from test_client import TestClient
+
+from time import sleep
 
 class CeleryTestCase(unittest.TestCase):
     default_username = 'lenin'
@@ -15,9 +17,15 @@ class CeleryTestCase(unittest.TestCase):
 
         # add an additional route used only in tests
         @self.app.route('/foo')
-        #@async
+        @async
         def foo():
             1 / 0
+
+        @self.app.route('/test-long')
+        @async
+        def long_task():
+            sleep(10)
+            return jsonify({}), 200
 
         self.ctx = self.app.app_context()
         self.ctx.push()
@@ -34,5 +42,8 @@ class CeleryTestCase(unittest.TestCase):
         self.ctx.pop()
 
     def test_celery(self):
-        response, json_response = self.client.get(url_for('ctasks.get_status',id=1))
-        self.assertEquals(response.status_code,202) 
+        response, json_response = self.client.get('/test-long')
+        self.assertEquals(response.status_code,202)
+        #print(json_response['Location'])
+        #response, json_response = self.client.get(url_for('tasks.get_status',id=1))
+        #self.assertEquals(response.status_code,202)
